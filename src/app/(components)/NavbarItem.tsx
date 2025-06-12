@@ -4,11 +4,11 @@ type Props = {
 };
 export default function NavbarItem({ label, navigateTo }: Props) {
   return (
-    <span
+    <button
       key={navigateTo}
       className='hover:bg-[#2A2F3C] hover:text-[#EBEBEB] rounded-xl p-2'
     >
       {label}
-    </span>
+    </button>
   );
 }
