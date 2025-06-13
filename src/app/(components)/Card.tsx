@@ -11,9 +11,13 @@ export default function Card({ title, icon, description }: Props) {
       <div className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] flex justify-center items-center rounded-full w-22 h-22 mt-8 '>
         {icon}
       </div>
-      <h2 className='text-xl text-center font-semibold pt-8 pb-6'>{title}</h2>
+      <h2 className='text-xl text-center font-semibold pt-8 pb-6 pl-1 pr-1'>
+        {title}
+      </h2>
       <div className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] w-[80%] h-1 rounded-full'></div>
-      <p className='text-wrap pt-6 text-lg text-center'>{description}</p>
+      <p className='text-wrap pt-6 text-lg text-center pl-1 pr-1'>
+        {description}
+      </p>
     </div>
   );
 }
