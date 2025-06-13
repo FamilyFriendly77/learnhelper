@@ -16,7 +16,7 @@ export default function RootLayout({
       lang='en'
       title='LearnHelper'
     >
-      <body className='bg-[#EBEBEB] w-full text-[#0F0A0A] h-full'>
+      <body className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] w-full text-[#171A21] h-full bg-fixed'>
         <NavBar />
         {children}
       </body>
