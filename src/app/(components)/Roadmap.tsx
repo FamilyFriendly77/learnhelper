@@ -9,24 +9,37 @@ type Props = {
 
 export default function Roadmap({ Roadmap }: Props) {
   return (
-    <div className='w-full h-200 flex flex-col gap-30'>
-      <h1>{Roadmap.description}</h1>
-      {Roadmap.items.map((item, i) => (
-        <>
-          <RoadmapItem
-            Item={item}
-            key={i}
-            id={`Item${i}`}
-          />
-
-          {i < Roadmap.items.length - 1 ? (
-            <Xarrow
-              start={`Item${i}`}
-              end={`Item${i + 1}`}
+    <div className='w-full h-200 flex flex-col gap-30 justify-start items-center'>
+      <h1 className='font-bold text-4xl text-[#171A21] mb-8'>
+        {Roadmap.description}
+      </h1>
+      <div className='w-full h-200 flex flex-col gap-30 justify-start items-start'>
+        {Roadmap.items.map((item, i) => (
+          <div
+            key={`Item${i}`}
+            className='w-fit items-start justify-start'
+          >
+            <RoadmapItem
+              Item={item}
+              id={`Item${i}`}
             />
-          ) : null}
-        </>
-      ))}
+
+            {i < Roadmap.items.length - 1 ? (
+              <Xarrow
+                path='smooth'
+                curveness={1.3}
+                startAnchor={'bottom'}
+                endAnchor={'top'}
+                color='#2A2F3C'
+                dashness={true}
+                showHead={false}
+                start={`Item${i}`}
+                end={`Item${i + 1}`}
+              />
+            ) : null}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

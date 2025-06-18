@@ -7,7 +7,7 @@ import { Showcase } from './(ShowDataAndTypes)/showcase';
 export default function Home() {
   return (
     <div className='w-full h-full flex rounded-t-4xl flex-col  bg-fixed justify-center items-center'>
-      <div className='w-full h-400 flex flex-col rounded-t-4xl bg-[#EBEBEB] mt-36 justify-center items-center'>
+      <div className='w-full h-800 flex flex-col rounded-t-4xl bg-[#EBEBEB] mt-36 justify-center items-center'>
         <WelcomeCard />
         <h1 className='font-bold text-4xl text-[#171A21] mb-8'>
           Why are we the right choice?
@@ -48,7 +48,7 @@ export default function Home() {
             description='We will provide guidlines to help you in your jurney to learn new skills. Having a set route will boost your success odds.'
           />
         </div>
-        <div className='w-full h-200 '>
+        <div className='w-full h-200 flex justify-center items-center'>
           <Roadmap Roadmap={Showcase} />
         </div>
       </div>
