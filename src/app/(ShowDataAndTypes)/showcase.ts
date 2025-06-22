@@ -9,7 +9,7 @@ export const Showcase: RoadmapType = {
       description:
         'Do you already have something in mind? Or maybe you just want to learn something for the fun of it',
       quickTips: [
-        'This is a quick tip, you will see them from time to time in your roadmaps, they will contain adive to make your learning expirience even better',
+        'This is a quick tip, you will see them from time to time in your roadmaps, they will contain advice to make your learning expirience even better',
         'Choose from the list of matched skills or create a new one.',
       ],
       references: [
@@ -45,7 +45,7 @@ export const Showcase: RoadmapType = {
     {
       content: 'Finish learning the skill and become a Mentor',
       description:
-        'Share your expirence from learning the skill and help us make the roadmap better. Share some Tips, reference sources you found along the way or add additional steps to roadmap!',
+        'Share your expirence from learning the skill and help us make the roadmap better. Share some Tips, reference sources you found along the way or add additional steps to roadmap if needed!',
       quickTips: null,
       references: null,
     },
