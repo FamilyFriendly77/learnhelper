@@ -17,7 +17,7 @@ export default function Roadmap({ Roadmap }: Props) {
         {Roadmap.items.map((item, i) => (
           <div
             key={`Item${i}`}
-            className='w-fit items-start justify-start'
+            className='w-fit h-fit items-start justify-start p-0'
           >
             <RoadmapItem
               Item={item}

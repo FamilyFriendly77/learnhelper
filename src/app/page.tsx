@@ -7,12 +7,12 @@ import { Showcase } from './(ShowDataAndTypes)/showcase';
 export default function Home() {
   return (
     <div className='w-full h-full flex rounded-t-4xl flex-col  bg-fixed justify-center items-center'>
-      <div className='w-full h-800 flex flex-col rounded-t-4xl bg-[#EBEBEB] mt-36 justify-center items-center'>
+      <div className='w-full h-600 flex flex-col rounded-t-4xl bg-[#EBEBEB] mt-36 justify-start items-center'>
         <WelcomeCard />
         <h1 className='font-bold text-4xl text-[#171A21] mb-8'>
           Why are we the right choice?
         </h1>
-        <div className='flex gap-16 mb-32'>
+        <div className='flex gap-16 mb-48'>
           <Card
             title='GROWING COMMUNITY OF MENTORS'
             icon={
@@ -50,6 +50,10 @@ export default function Home() {
         </div>
         <div className='w-full h-200 flex justify-center items-center'>
           <Roadmap Roadmap={Showcase} />
+        </div>
+        <div>
+          A Question poped in your mind while learning? Ask Menthors from this
+          topic.
         </div>
       </div>
     </div>
