@@ -9,11 +9,11 @@ type Props = {
 
 export default function Roadmap({ Roadmap }: Props) {
   return (
-    <div className='w-full h-200 flex flex-col gap-30 justify-start items-center'>
+    <div className='w-full h-fit flex flex-col gap-30 mb-48 justify-start items-center'>
       <h1 className='font-bold text-4xl text-[#171A21] mb-8'>
         {Roadmap.description}
       </h1>
-      <div className='w-full h-200 flex flex-col gap-30 justify-start items-start'>
+      <div className='w-full h-fit flex flex-col gap-30 justify-start items-start'>
         {Roadmap.items.map((item, i) => (
           <div
             key={`Item${i}`}

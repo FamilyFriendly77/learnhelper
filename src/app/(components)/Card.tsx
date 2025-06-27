@@ -15,7 +15,7 @@ export default function Card({ title, icon, description }: Props) {
         {title}
       </h2>
       <div className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] w-[80%] h-1 rounded-full'></div>
-      <p className='text-wrap pt-6 text-lg text-center pl-1 pr-1'>
+      <p className='text-wrap pt-6 text-lg text-center pl-2 pr-2'>
         {description}
       </p>
     </div>

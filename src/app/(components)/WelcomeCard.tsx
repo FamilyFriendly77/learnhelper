@@ -1,6 +1,6 @@
 export default function WelcomeCard() {
   return (
-    <div className=' flex w-full h-128 mt-16 mb-16 flex-col items-center justify-center'>
+    <div className=' flex w-full h-fit mt-48 mb-48 flex-col items-center justify-center'>
       <h1 className='font-bold text-4xl '>Do you want to learn a new skill?</h1>
       <h3 className='font-semibold text-3xl mt-2 '>
         LET US HELP YOU WITH THAT
