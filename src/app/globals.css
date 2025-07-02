@@ -1,5 +1,12 @@
 @import 'tailwindcss';
 
+#__next {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @theme {
   --animate-bounce: bounce 0.5s 0.1s ease-in-out;
 
