@@ -1,4 +1,27 @@
+'use client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import NavbarItem from './NavbarItem';
+function AuthButton() {
+  const { data: session } = useSession();
+  if (session) {
+    return (
+      <NavbarItem
+        label={'Sign Out'}
+        Click={() => {
+          signOut();
+        }}
+      />
+    );
+  }
+  return (
+    <NavbarItem
+      label={'Sign In'}
+      Click={() => {
+        signIn();
+      }}
+    />
+  );
+}
 
 export default function NavBar() {
   return (
@@ -7,20 +30,17 @@ export default function NavBar() {
       <div className='flex flex-row gap-8'>
         <NavbarItem
           label='Start Learning'
-          navigateTo='dashboard'
+          Click={() => {}}
         />
         <NavbarItem
           label='Contact Us'
-          navigateTo='dashboard'
+          Click={() => {}}
         />
         <NavbarItem
           label='Learn More'
-          navigateTo='dashboard'
+          Click={() => {}}
         />
-        <NavbarItem
-          label='Sign In'
-          navigateTo='dashboard'
-        />
+        <AuthButton />
       </div>
     </div>
   );
