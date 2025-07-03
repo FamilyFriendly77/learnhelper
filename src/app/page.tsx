@@ -1,11 +1,17 @@
+'use client';
 import { ArrowRight, Blocks, BookMarkedIcon, Users } from 'lucide-react';
 import Card from './(components)/Card';
 import WelcomeCard from './(components)/WelcomeCard';
 import Roadmap from './(components)/Roadmap';
 import { Showcase } from './(ShowDataAndTypes)/showcase';
 import Message from './(components)/Message';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
+  const { data: session } = useSession();
+  if (session) {
+    return <div></div>;
+  }
   return (
     <div className='w-full h-full flex rounded-t-4xl flex-col  bg-fixed justify-center items-center'>
       <div className='w-full h-fit flex flex-col rounded-4xl bg-[#EBEBEB] mt-36 justify-start items-center'>
