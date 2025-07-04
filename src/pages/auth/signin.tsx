@@ -30,7 +30,6 @@ export default function SignIn({
       email: email,
       password: password,
     });
-    console.log('I guess');
   };
   return (
     <div className='w-screen h-screen bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] bg-fixed'>
@@ -98,7 +97,7 @@ export default function SignIn({
         )}
         <div>
           {Object.values(providers).map((provider) => {
-            if (provider.name != 'credentials') {
+            if (provider.name != 'Credentials') {
               return (
                 <button
                   key={provider.name}

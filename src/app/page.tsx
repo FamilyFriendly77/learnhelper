@@ -6,11 +6,26 @@ import Roadmap from './(components)/Roadmap';
 import { Showcase } from './(ShowDataAndTypes)/showcase';
 import Message from './(components)/Message';
 import { useSession } from 'next-auth/react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export default function Home() {
   const { data: session } = useSession();
+
+  const queryClient = useQueryClient();
+
+  const { data: userData } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      if (session) {
+        const data = await fetch(`/api/auth/getUser/${session?.user?.email}`);
+        return await data.json();
+      }
+      return null;
+    },
+  });
+
   if (session) {
-    return <div></div>;
+    return <div>{}</div>;
   }
   return (
     <div className='w-full h-full flex rounded-t-4xl flex-col  bg-fixed justify-center items-center'>
