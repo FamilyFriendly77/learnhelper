@@ -17,14 +17,20 @@ export default function SignIn({
   const [password, setPassword] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
   const [name, setName] = useState('');
-  const SubmitSignUp = async (e) => {
-    e.preventDefault();
+  const SubmitSignUp = async () => {
     console.log('signup');
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email: email, password: password, name: name }),
     });
     console.log(response);
+  };
+  const SubmitSignIn = async () => {
+    await signIn('credentials', {
+      email: email,
+      password: password,
+    });
+    console.log('I guess');
   };
   return (
     <div className='w-screen h-screen bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] bg-fixed'>
@@ -45,17 +51,26 @@ export default function SignIn({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <input type='submit' />
+              <input
+                type='submit'
+                onClick={SubmitSignIn}
+              />
             </form>
             <span>
               Dont have an account?{' '}
-              <button onClick={() => setIsSignIn(false)}>Sign In</button>
+              <button
+                onClick={() => {
+                  setIsSignIn(false);
+                }}
+              >
+                Sign In
+              </button>
             </span>
           </div>
         ) : (
           <div>
             {' '}
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <input
                 type='text'
                 placeholder='Email'

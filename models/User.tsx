@@ -15,6 +15,6 @@ const UserSchema = new Schema({
   salt: String,
   password: String,
 });
-const User = models.User || model('User', UserSchema);
+const UserDB = models.User || model('User', UserSchema);
 
-export default User;
+export default UserDB;

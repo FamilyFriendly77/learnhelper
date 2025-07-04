@@ -1,8 +1,8 @@
-import NextAuth, { Profile } from 'next-auth';
+import NextAuth, { Account, Profile } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { connectMongo } from '../../../../../utils/database';
-import User from '../../../../../models/User';
+import UserDB from '../../../../../models/User';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
 
@@ -21,20 +21,30 @@ export const authOptions = {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
-        await connectMongo();
-        const user = await User.findOne({ email: credentials?.email });
-        if (!user) {
-          return false;
+      async authorize(
+        credentials: Record<'email' | 'password', string> | undefined
+      ) {
+        try {
+          await connectMongo();
+          const user = await UserDB.findOne({ email: credentials?.email });
+          if (!user) {
+            return null;
+          }
+          const passwd = await bcrypt.hash(
+            credentials?.password || '',
+            user.salt
+          );
+          if (passwd === user.password) {
+            return {
+              id: user._id,
+              email: user.email,
+            };
+          }
+          return null;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          return null;
         }
-        const passwd = await bcrypt.hash(
-          credentials?.password || '',
-          user.salt
-        );
-        if (passwd === user.password) {
-          return true;
-        }
-        return false;
       },
     }),
   ],
@@ -42,17 +52,25 @@ export const authOptions = {
     signIn: '/auth/signin',
   },
   callbacks: {
-    async signIn({ profile }: { profile: Profile }) {
-      console.log(profile);
+    async signIn({
+      account,
+      profile,
+    }: {
+      account: Account | null;
+      profile?: Profile | undefined;
+    }) {
+      if (account?.provider === 'credentials') {
+        return true;
+      }
       try {
         await connectMongo();
-        const userExist = await User.findOne({ email: profile.email });
+        const userExist = await UserDB.findOne({ email: profile?.email });
 
         if (!userExist) {
-          await User.create({
-            email: profile.email,
-            name: profile.name,
-            image: profile.image,
+          await UserDB.create({
+            email: profile?.email,
+            name: profile?.name,
+            image: profile?.image,
           });
         }
         return true;
