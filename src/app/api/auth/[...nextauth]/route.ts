@@ -3,6 +3,8 @@ import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { connectMongo } from '../../../../../utils/database';
 import User from '../../../../../models/User';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcrypt';
 
 export const authOptions = {
   providers: [
@@ -13,6 +15,27 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_ID ?? '',
       clientSecret: process.env.GOOGLE_SECRET ?? '',
+    }),
+    CredentialsProvider({
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        await connectMongo();
+        const user = await User.findOne({ email: credentials?.email });
+        if (!user) {
+          return false;
+        }
+        const passwd = await bcrypt.hash(
+          credentials?.password || '',
+          user.salt
+        );
+        if (passwd === user.password) {
+          return true;
+        }
+        return false;
+      },
     }),
   ],
   pages: {

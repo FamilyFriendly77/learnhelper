@@ -4,6 +4,7 @@ export const connectMongo = async () => {
     await mongoose.connect(process.env.MONGO_URI ?? '', {
       dbName: 'LearnHelper',
     });
+    console.log('Connected to db');
   } catch (error) {
     console.log(error);
   }

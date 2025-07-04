@@ -12,6 +12,8 @@ const UserSchema = new Schema({
   image: {
     type: String,
   },
+  salt: String,
+  password: String,
 });
 const User = models.User || model('User', UserSchema);
 

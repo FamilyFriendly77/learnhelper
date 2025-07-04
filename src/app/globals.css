@@ -8,9 +8,7 @@
 }
 
 @theme {
-  --animate-bounce: bounce 0.5s 0.1s ease-in-out;
-
-  @keyframes bounce {
+  --animate-bounce: bounce 0.5s 0.1s ease-in-ou @keyframes bounce {
     0% {
       transform: translateY(0%);
     }

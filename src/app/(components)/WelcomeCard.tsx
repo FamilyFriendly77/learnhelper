@@ -5,7 +5,10 @@ export default function WelcomeCard() {
       <h3 className='font-semibold text-3xl mt-2 '>
         LET US HELP YOU WITH THAT
       </h3>
-      <button className='mt-8 bg-[#FF1F1F] text-[#EBEBEB] p-3 rounded-full font-bold '>
+      <button
+        className='mt-8 bg-[#FF1F1F] text-[#EBEBEB] p-3 rounded-full font-bold '
+        onClick={() => {}}
+      >
         Start Learning now!
       </button>
     </div>
