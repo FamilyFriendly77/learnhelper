@@ -14,6 +14,7 @@ const UserSchema = new Schema({
   },
   salt: String,
   password: String,
+  lastRoadmap: String,
 });
 const UserDB = models.User || model('User', UserSchema);
 

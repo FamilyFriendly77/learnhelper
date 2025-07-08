@@ -22,11 +22,11 @@ export default async function RootLayout({
       lang='en'
       title='LearnHelper'
     >
-      <body className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] w-full text-[#171A21] h-full bg-fixed'>
+      <body className='bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] min-h-screen w-full text-[#171A21] min-h-screen bg-fixed flex flex-col'>
         <Providers>
           <SessionProvider session={session}>
             <NavBar />
-            {children}
+            <div className='grow-1 w-full flex'>{children}</div>
           </SessionProvider>
         </Providers>
       </body>

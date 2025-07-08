@@ -47,7 +47,7 @@ export default function SignIn({
   return (
     <div className='w-screen h-screen bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] bg-fixed flex items-center justify-center text-[#2A2F3C]'>
       <div className='w-128 h-128 bg-[#EBEBEB] rounded-4xl flex flex-col items-center p-6 shadow-2xl'>
-        <h1 className='font-bold text-4xl mb-12 mt-4'>
+        <h1 className='font-bold text-4xl mb-8 mt-2'>
           {isSignIn ? 'Sign In' : 'Sign Up'}
         </h1>
         {isSignIn ? (
@@ -77,16 +77,15 @@ export default function SignIn({
                 value={'Sign In'}
               />
             </form>
-            <span>
-              Dont have an account?{' '}
-              <button
-                onClick={() => {
-                  setIsSignIn(false);
-                }}
-              >
-                Sign Up
-              </button>
-            </span>
+            <button
+              onClick={() => {
+                setIsSignIn(false);
+              }}
+            >
+              <span className='hover:border-b-1 p-0.5'>
+                Dont have an account? Sign Up
+              </span>
+            </button>
           </div>
         ) : (
           <div className='flex flex-col w-full h-fit mb-6 justify-center items-center'>
@@ -123,16 +122,15 @@ export default function SignIn({
                 value={'Sign Up'}
               />
             </form>
-            <span>
-              Already have an account?{' '}
-              <button
-                onClick={() => {
-                  setIsSignIn(true);
-                }}
-              >
-                Sign In
-              </button>
-            </span>
+            <button
+              onClick={() => {
+                setIsSignIn(true);
+              }}
+            >
+              <span className='hover:border-b-1 p-0.5'>
+                Already have an account? Sign In
+              </span>
+            </button>
           </div>
         )}
         <div className='w-[90%] h-[2px] rounded-2xl bg-[#171A21] mb-4'></div>

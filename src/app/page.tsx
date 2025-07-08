@@ -25,7 +25,27 @@ export default function Home() {
   });
 
   if (session) {
-    return <div>{}</div>;
+    return (
+      <div className=' w-full  grow-1 flex items-center justify-center'>
+        <div className='w-[60%] flex flex-col justify-center items-center h-fit bg-[#EBEBEB] rounded-3xl'>
+          <h1 className='font-bold text-2xl w-full text-center pb-8 pt-8'>
+            WHAT DO YOU WANT TO LEARN TODAY?
+          </h1>
+          <div className='w-full flex justify-center items-center pb-4'>
+            <h3 className='font-semibold text-xl pr-2'>I want to learn</h3>
+            <input
+              type='text'
+              className='p-2 rounded-2xl w-128 border-2 border-[#171A21]'
+            ></input>
+          </div>
+          <div className='pb-8'>
+            <button className='bg-[#FF1F1F] rounded-4xl py-2 px-4 text-[#EBEBEB] font-semibold'>
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
   return (
     <div className='w-full h-full flex rounded-t-4xl flex-col  bg-fixed justify-center items-center'>
