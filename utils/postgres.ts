@@ -1,7 +1,11 @@
 import postgres from 'postgres';
-export default async function getData() {
+export async function getSkillsResults({
+  SearchQuery,
+}: {
+  SearchQuery: string;
+}) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
-  const response = await sql`SELECT * FROM public."Skills"`;
-  console.log(response[0]);
-  return response[0];
+  const response = await sql`SELECT * FROM public."Skills"
+ WHERE "Skill" ILIKE '%' || ${SearchQuery} || '%'`;
+  return response;
 }

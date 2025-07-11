@@ -7,12 +7,14 @@ import { Showcase } from './(ShowDataAndTypes)/showcase';
 import Message from './(components)/Message';
 import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
-
+  const [skill, setSkill] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const { data: userData } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
@@ -23,6 +25,12 @@ export default function Home() {
       return null;
     },
   });
+  async function Search() {
+    const data = await fetch(`/api/skills/search/${skill.toUpperCase()}`);
+    const res = await data.json();
+    setSearchResults(res.result);
+    return res.result;
+  }
 
   if (session) {
     return (
@@ -31,15 +39,34 @@ export default function Home() {
           <h1 className='font-bold text-2xl w-full text-center pb-8 pt-8'>
             WHAT DO YOU WANT TO LEARN TODAY?
           </h1>
-          <div className='w-full flex justify-center items-center pb-4'>
-            <h3 className='font-semibold text-xl pr-2'>I want to learn</h3>
-            <input
-              type='text'
-              className='p-2 rounded-2xl w-128 border-2 border-[#171A21]'
-            ></input>
+          <div className='w-full flex justify-center items-start pb-4'>
+            <h3 className='font-semibold text-xl pr-2 h-12 justify-center items-center flex'>
+              I want to learn
+            </h3>
+            <div className='flex-col justify-center items-center'>
+              <input
+                type='text'
+                className='p-2 rounded-2xl w-128 h-12 border-2 border-[#171A21]'
+                value={skill}
+                onChange={(e) => {
+                  setSkill(e.target.value);
+                  if (skill) Search();
+                  return 0;
+                }}
+              ></input>
+              <div className='flex-col justify-center items-center'>
+                {searchResults.map((res) => (
+                  <div key={res.id}>{res.Skill}</div>
+                ))}
+              </div>
+            </div>
           </div>
+
           <div className='pb-8'>
-            <button className='bg-[#FF1F1F] rounded-4xl py-2 px-4 text-[#EBEBEB] font-semibold'>
+            <button
+              className='bg-[#FF1F1F] rounded-4xl py-2 px-4 text-[#EBEBEB] font-semibold'
+              onClick={() => null}
+            >
               Submit
             </button>
           </div>

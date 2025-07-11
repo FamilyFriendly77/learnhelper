@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import UserDB from '../../../../../../models/User';
 import { connectMongo } from '../../../../../../utils/database';
-import getData from '../../../../../../utils/postgres';
 
 export async function GET(
   req: Request,
@@ -12,7 +11,6 @@ export async function GET(
   try {
     await connectMongo();
     user = await UserDB.findOne({ email: email });
-    getData();
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });
