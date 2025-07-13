@@ -7,14 +7,17 @@ import { Showcase } from './(ShowDataAndTypes)/showcase';
 import Message from './(components)/Message';
 import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const queryClient = useQueryClient();
+  const [hovers, setHovers] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [skill, setSkill] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: userData } = useQuery({
     queryKey: ['user'],
     queryFn: async () => {
@@ -25,47 +28,99 @@ export default function Home() {
       return null;
     },
   });
-  async function Search() {
-    const data = await fetch(`/api/skills/search/${skill.toUpperCase()}`);
-    const res = await data.json();
-    setSearchResults(res.result);
-    return res.result;
-  }
+  const Search = useCallback(async (query: string) => {
+    try {
+      const data = await fetch(`/api/skills/search/${query}`);
+      const res = await data.json();
+      const filteredResults = res.result.filter(
+        (item: { Skill: string }) => item.Skill !== query.trimEnd()
+      );
+      setSearchResults(filteredResults);
+    } catch (e) {
+      console.log('Search Error:', e);
+      return 0;
+    }
+  }, []);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (skill.trim()) {
+        Search(skill.trim());
+      }
+    }, 300); // debounce by 300ms
+
+    return () => clearTimeout(delayDebounce);
+  }, [skill, Search]);
 
   if (session) {
     return (
       <div className=' w-full  grow-1 flex items-center justify-center'>
         <div className='w-[60%] flex flex-col justify-center items-center h-fit bg-[#EBEBEB] rounded-3xl'>
-          <h1 className='font-bold text-2xl w-full text-center pb-8 pt-8'>
+          <h1 className='font-bold text-2xl w-full text-center pb-6 pt-8'>
             WHAT DO YOU WANT TO LEARN TODAY?
           </h1>
-          <div className='w-full flex justify-center items-start pb-4'>
+          <div className='w-full flex justify-center items-start pb-6'>
             <h3 className='font-semibold text-xl pr-2 h-12 justify-center items-center flex'>
               I want to learn
             </h3>
             <div className='flex-col justify-center items-center'>
               <input
+                id='SkillInput'
                 type='text'
+                onFocus={() => {
+                  setShowSuggestions(true);
+                }}
+                onBlur={() => {
+                  if (!hovers) setShowSuggestions(false);
+                }}
                 className='p-2 rounded-2xl w-128 h-12 border-2 border-[#171A21]'
                 value={skill}
                 onChange={(e) => {
-                  setSkill(e.target.value);
-                  if (skill) Search();
-                  return 0;
+                  const value = e.target.value;
+                  setSkill(value.toUpperCase());
                 }}
-              ></input>
-              <div className='flex-col justify-center items-center'>
-                {searchResults.map((res) => (
-                  <div key={res.id}>{res.Skill}</div>
-                ))}
-              </div>
+              />
+              {showSuggestions ? (
+                <div
+                  className='w-128 flex justify-center items-center absolute'
+                  onMouseEnter={() => setHovers(true)}
+                  onMouseLeave={() => setHovers(false)}
+                >
+                  <div className='flex-col justify-center items-center'>
+                    {searchResults.map((res: { id: number; Skill: string }) => {
+                      return (
+                        <div
+                          key={res.id}
+                          className='border-solid border-x-2 border-b-2 w-120 h-8 text-center flex justify-center content-box items-center font-semibold bg-[#EBEBEB] hover:bg-[#FF1F1F] hover:border-[#171A21] hover:text-[#EBEBEB]'
+                          onClick={() => {
+                            setSkill(res.Skill);
+                            Search(res.Skill);
+                            document.getElementById('SkillInput')?.focus();
+                          }}
+                        >
+                          {res.Skill}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 
           <div className='pb-8'>
             <button
-              className='bg-[#FF1F1F] rounded-4xl py-2 px-4 text-[#EBEBEB] font-semibold'
-              onClick={() => null}
+              className='bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold'
+              onClick={() => {
+                if (searchResults.length) {
+                  console.log('suggestions');
+                  //show popup (We already have something simmilar ready for you, check search suggestions and if anything seems like something you are interested in, if not submit again)
+                  return null;
+                } else {
+                  console.log('no suggestions');
+                  return null;
+                }
+              }}
             >
               Submit
             </button>
@@ -90,7 +145,7 @@ export default function Home() {
                 size={64}
               />
             }
-            description='Our community of mentors who participate in making your learning expirience better every day is rapidly growing.'
+            description='Our community of mentors who participate in making your learning experience better every day is rapidly growing.'
           />
           <Card
             title='BETTER ORGANIZED, FASTER AND EASIER LEARNING'
@@ -101,12 +156,12 @@ export default function Home() {
               />
             }
             //tbc
-            description='We will provide guidlines to help you in your jurney to learn new skills. Having a set route will boost your success odds.'
+            description='We will provide guidlines to help you in your journey to learn new skills. Having a set route will boost your success odds.'
           />
 
           <Card
             //to be changed to another card, rn its placeholder
-            title='BECOME A MENTHOR IN A TOPIC YOU LOVE'
+            title='BECOME A MENTOR IN A TOPIC YOU LOVE'
             icon={
               <Blocks
                 color='#EBEBEB'
@@ -114,7 +169,7 @@ export default function Home() {
               />
             }
             //tbc
-            description='Help others in their journey by making roadmaps better or anwering their questions in our chat. Help them grow like others helped you.'
+            description='Help others in their journey by making roadmaps better or answering their questions in our chat. Help them grow like others helped you.'
           />
         </div>
         <div className='w-full h-fit flex justify-center items-center'>
@@ -122,7 +177,7 @@ export default function Home() {
         </div>
         {/* Chat showcase  tbm to separate component when I will implement real chat*/}
         <div className='font-bold text-4xl text-[#171A21] mb-8font-bold text-4xl text-[#171A21] mb-16'>
-          A Question popped up in your mind while learning? Ask Menthors from
+          A Question popped up in your mind while learning? Ask Mentors from
           this topic.
         </div>
         <div className='border-3 rounded-t-3xl border-solid border-[#171A21] h-160 w-120 mb-48 flex flex-col justify-center items-between bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] rounded-t-3xl'>
