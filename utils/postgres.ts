@@ -18,4 +18,6 @@ export async function getSkillRoadmap(query: string) {
   return response;
 }
 
-export async function createSkillRoadmap(query: string, roadmap: RoadmapType) {}
+export async function createSkillRoadmap(query: string, roadmap: RoadmapType) {
+  const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
+}

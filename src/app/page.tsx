@@ -28,6 +28,14 @@ export default function Home() {
       return null;
     },
   });
+  const Submit = async () => {
+    try {
+      const data = await fetch(`/api/skills/${skill}`, { method: 'POST' });
+      console.log(await data.json());
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const Search = useCallback(async (query: string) => {
     try {
       const data = await fetch(`/api/skills/search/${query}`);
@@ -118,7 +126,7 @@ export default function Home() {
                   return null;
                 } else {
                   console.log('no suggestions');
-                  return null;
+                  Submit();
                 }
               }}
             >
