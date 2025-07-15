@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 export default function Home() {
   const { data: session } = useSession();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [skillExists, setSkillExists] = useState(false);
   const queryClient = useQueryClient();
   const [hovers, setHovers] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -28,7 +29,7 @@ export default function Home() {
       return null;
     },
   });
-  const Submit = async () => {
+  const SubmitCreateSkill = async () => {
     try {
       const data = await fetch(`/api/skills/${skill}`, { method: 'POST' });
       console.log(await data.json());
@@ -38,11 +39,17 @@ export default function Home() {
   };
   const Search = useCallback(async (query: string) => {
     try {
+      setSkillExists(false);
       const data = await fetch(`/api/skills/search/${query}`);
       const res = await data.json();
-      const filteredResults = res.result.filter(
-        (item: { Skill: string }) => item.Skill !== query.trimEnd()
-      );
+      const filteredResults = res.result.filter((item: { Skill: string }) => {
+        if (item.Skill !== query.trimEnd()) {
+          return true;
+        } else {
+          setSkillExists(true);
+          return false;
+        }
+      });
       setSearchResults(filteredResults);
     } catch (e) {
       console.log('Search Error:', e);
@@ -120,13 +127,16 @@ export default function Home() {
             <button
               className='bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold'
               onClick={() => {
-                if (searchResults.length) {
-                  console.log('suggestions');
-                  //show popup (We already have something simmilar ready for you, check search suggestions and if anything seems like something you are interested in, if not submit again)
-                  return null;
+                if (skillExists) {
                 } else {
-                  console.log('no suggestions');
-                  Submit();
+                  if (searchResults.length) {
+                    console.log('suggestions');
+                    //show popup (We already have something simmilar ready for you, check search suggestions and if anything seems like something you are interested in, if not submit again)
+                    return null;
+                  } else {
+                    console.log('no suggestions');
+                    SubmitCreateSkill();
+                  }
                 }
               }}
             >

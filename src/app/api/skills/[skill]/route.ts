@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { OpenAI } from 'openai';
 import { Instructions } from '../../../../../openaiInstructions';
-import { createSkillRoadmap } from '../../../../../utils/postgres';
+import {
+  createSkillResult,
+  createSkillRoadmap,
+} from '../../../../../utils/postgres';
 
 export async function GET(
   req: Request,
@@ -32,7 +35,8 @@ export async function POST(
     });
     roadmap = JSON.parse(await res.output_text);
     roadmap = roadmap[0];
-    createSkillRoadmap(skill, roadmap, 1);
+    const id = await createSkillResult(skill);
+    createSkillRoadmap(skill, roadmap, id);
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });

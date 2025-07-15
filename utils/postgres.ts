@@ -10,6 +10,13 @@ export async function getSkillsResults({
  WHERE "Skill" ILIKE '%' || ${SearchQuery} || '%'`;
   return response;
 }
+export async function createSkillResult(query: string) {
+  const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
+  const response =
+    await sql`INSERT INTO public."Skills"("Skill") VALUES(${query}) RETURNING id`;
+  console.log(response);
+  return response[0].id;
+}
 
 export async function getSkillRoadmap(query: string) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
@@ -17,8 +24,9 @@ export async function getSkillRoadmap(query: string) {
     await sql`SELECT * FROM public."Roadmaps" WHERE "SkillId" =  || ${query} ||`;
   return response;
 }
-//in future it should idealy be separate tables for quick tips and items but for now it will do, yes i know its wrong but im tired and screw it, it works and for now it is not that bad
-//ye ye i will do it tomorrow
+//at the end of a day I decided to leave it as it is,
+//  the reason for that is i don't really need to query by items, evolve a schema or do anything that requires normalizing this data,
+//  it's complex and by storing it in json I don't take a risk of mixing up the order without additional fiields
 export async function createSkillRoadmap(
   query: string,
   roadmap: RoadmapType,
