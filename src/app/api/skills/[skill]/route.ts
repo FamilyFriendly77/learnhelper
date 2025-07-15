@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { OpenAI } from 'openai';
 import { Instructions } from '../../../../../openaiInstructions';
+import { createSkillRoadmap } from '../../../../../utils/postgres';
 
 export async function GET(
   req: Request,
@@ -30,6 +31,8 @@ export async function POST(
       input: `I want to learn ${skill}, generate a roadmap to help me to achieve the goal and then become proficient in it and expand my knowlage`,
     });
     roadmap = JSON.parse(await res.output_text);
+    roadmap = roadmap[0];
+    createSkillRoadmap(skill, roadmap, 1);
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });
