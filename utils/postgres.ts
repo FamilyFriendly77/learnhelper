@@ -14,11 +14,10 @@ export async function createSkillResult(query: string) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
   const response =
     await sql`INSERT INTO public."Skills"("Skill") VALUES(${query}) RETURNING id`;
-  console.log(response);
   return response[0].id;
 }
 
-export async function getSkillRoadmap(query: string) {
+export async function getSkillRoadmap(query: number) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
   const response =
     await sql`SELECT * FROM public."Roadmaps" WHERE "SkillId" =  || ${query} ||`;
@@ -37,6 +36,5 @@ export async function createSkillRoadmap(
     await sql`INSERT INTO public."Roadmaps"(skillname, description, items, skillid) VALUES(${
       roadmap.skillName
     }, ${roadmap.description}, ${JSON.stringify(roadmap.items)}, ${skillId}) `;
-  console.log(response);
   return response;
 }

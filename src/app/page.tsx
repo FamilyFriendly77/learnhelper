@@ -8,12 +8,15 @@ import Message from './(components)/Message';
 import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { data: session } = useSession();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [skillExists, setSkillExists] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const [submited, setSubmited] = useState(false);
   const [hovers, setHovers] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [skill, setSkill] = useState('');
@@ -33,6 +36,8 @@ export default function Home() {
     try {
       const data = await fetch(`/api/skills/${skill}`, { method: 'POST' });
       console.log(await data.json());
+      router.push('/skills/aaa');
+      //navigate
     } catch (e) {
       console.log(e);
     }
@@ -128,9 +133,11 @@ export default function Home() {
               className='bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold'
               onClick={() => {
                 if (skillExists) {
+                  //naviigate
                 } else {
-                  if (searchResults.length) {
+                  if (searchResults.length && !submited) {
                     console.log('suggestions');
+                    setSubmited(true);
                     //show popup (We already have something simmilar ready for you, check search suggestions and if anything seems like something you are interested in, if not submit again)
                     return null;
                   } else {

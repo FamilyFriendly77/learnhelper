@@ -10,7 +10,7 @@ export async function GET(
   req: Request,
   { params }: { params: { skill: string } }
 ) {
-  let result = null;
+  const result = null;
   const { skill } = await params;
   try {
   } catch (error) {
