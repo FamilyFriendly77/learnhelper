@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+//it might be a good idea to make search bar user component and the whole front page a server component, it should not be complicated it can make the site more snappy and overall ipmrove optimazation but it is a task for later
 export default function Home() {
   const { data: session } = useSession();
   const [skillExists, setSkillExists] = useState(false);
@@ -35,8 +35,10 @@ export default function Home() {
   const SubmitCreateSkill = async () => {
     try {
       const data = await fetch(`/api/skills/${skill}`, { method: 'POST' });
-      console.log(await data.json());
-      router.push('/skills/aaa');
+      const response = await data.json();
+      console.log(response);
+      console.log(response.skillId);
+      router.push(`/roadmap/${response.skillId}`);
       //navigate
     } catch (e) {
       console.log(e);
@@ -74,7 +76,7 @@ export default function Home() {
 
   if (session) {
     return (
-      <div className=' w-full  grow-1 flex items-center justify-center'>
+      <div className='w-full  grow-1 flex items-center justify-center'>
         <div className='w-[60%] flex flex-col justify-center items-center h-fit bg-[#EBEBEB] rounded-3xl'>
           <h1 className='font-bold text-2xl w-full text-center pb-6 pt-8'>
             WHAT DO YOU WANT TO LEARN TODAY?

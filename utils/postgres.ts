@@ -20,8 +20,8 @@ export async function createSkillResult(query: string) {
 export async function getSkillRoadmap(query: number) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
   const response =
-    await sql`SELECT * FROM public."Roadmaps" WHERE "SkillId" =  || ${query} ||`;
-  return response;
+    await sql`SELECT * FROM public."Roadmaps" WHERE "skillid" = ${query}`;
+  return response[0];
 }
 //at the end of a day I decided to leave it as it is,
 //  the reason for that is i don't really need to query by items, evolve a schema or do anything that requires normalizing this data,

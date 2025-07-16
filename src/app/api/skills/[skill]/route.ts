@@ -11,6 +11,7 @@ export async function GET(
   { params }: { params: { skill: string } }
 ) {
   const result = null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { skill } = await params;
   try {
   } catch (error) {
@@ -25,6 +26,7 @@ export async function POST(
   { params }: { params: { skill: string } }
 ) {
   let roadmap = null;
+  let id = null;
   try {
     const { skill } = await params;
     const client = new OpenAI();
@@ -35,11 +37,12 @@ export async function POST(
     });
     roadmap = JSON.parse(await res.output_text);
     roadmap = roadmap[0];
-    const id = await createSkillResult(skill);
+    id = await createSkillResult(skill);
+    console.log(id);
     createSkillRoadmap(skill, roadmap, id);
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });
   }
-  return NextResponse.json({ roadmap }, { status: 200 });
+  return NextResponse.json({ skillId: id }, { status: 200 });
 }

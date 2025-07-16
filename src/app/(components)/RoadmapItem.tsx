@@ -1,3 +1,4 @@
+'use client';
 import {
   ArrowRight,
   ChevronDown,
@@ -28,7 +29,7 @@ export default function RoadmapItem({ Item, id }: Props) {
       >
         <div className='flex flex-row justify-start w-fit h-fit items-center gap-4'>
           <CircleCheck size={48} />
-          <div className='flex-col w-min border-2 p-4 mb-2 mt-2 min-w-200 rounded-xl pl-8 pr-8'>
+          <div className='flex-col w-fit border-2 p-4 mb-2 mt-2 max-w-240 rounded-xl pl-8 pr-8'>
             <div className='flex flex-col gap-2 justify-start items-start'>
               <h1 className='text-3xl font-bold text-nowrap w-fit'>
                 {Item.content}

@@ -1,4 +1,3 @@
-'use client';
 import Xarrow from 'react-xarrows';
 import { RoadmapType } from '../(ShowDataAndTypes)/RoadmapTypes';
 import RoadmapItem from './RoadmapItem';
