@@ -4,6 +4,7 @@ import { Instructions } from '../../../../../openaiInstructions';
 import {
   createSkillResult,
   createSkillRoadmap,
+  doesSkillExist,
 } from '../../../../../utils/postgres';
 
 export async function GET(
@@ -27,19 +28,24 @@ export async function POST(
 ) {
   let roadmap = null;
   let id = null;
+  const { skill } = await params;
   try {
-    const { skill } = await params;
-    const client = new OpenAI();
-    const res = await client.responses.create({
-      model: 'o4-mini-2025-04-16',
-      instructions: Instructions,
-      input: `I want to learn ${skill}, generate a roadmap to help me to achieve the goal and then become proficient in it and expand my knowlage`,
-    });
-    roadmap = JSON.parse(await res.output_text);
-    roadmap = roadmap[0];
-    id = await createSkillResult(skill);
-    console.log(id);
-    createSkillRoadmap(skill, roadmap, id);
+    const doesExist = await doesSkillExist(skill);
+    if (doesExist) {
+      id = doesExist.id;
+    } else {
+      const client = new OpenAI();
+      console.log('++++');
+      const res = await client.responses.create({
+        model: 'o4-mini-2025-04-16',
+        instructions: Instructions,
+        input: `I want to learn ${skill}, generate a roadmap to help me to achieve the goal and then become proficient in it and expand my knowlage`,
+      });
+      roadmap = JSON.parse(await res.output_text);
+      roadmap = roadmap[0];
+      id = await createSkillResult(skill);
+      createSkillRoadmap(skill, roadmap, id);
+    }
   } catch (error) {
     console.log(error);
     return NextResponse.json({ message: 'Error' }, { status: 500 });

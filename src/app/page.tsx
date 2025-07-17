@@ -12,15 +12,14 @@ import { useRouter } from 'next/navigation';
 //it might be a good idea to make search bar user component and the whole front page a server component, it should not be complicated it can make the site more snappy and overall ipmrove optimazation but it is a task for later
 export default function Home() {
   const { data: session } = useSession();
-  const [skillExists, setSkillExists] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [submited, setSubmited] = useState(false);
   const [hovers, setHovers] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [skill, setSkill] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: userData } = useQuery({
     queryKey: ['user'],
@@ -32,31 +31,30 @@ export default function Home() {
       return null;
     },
   });
-  const SubmitCreateSkill = async () => {
+  const SubmitSkill = async () => {
     try {
+      console.log();
       const data = await fetch(`/api/skills/${skill}`, { method: 'POST' });
       const response = await data.json();
-      console.log(response);
-      console.log(response.skillId);
       router.push(`/roadmap/${response.skillId}`);
       //navigate
     } catch (e) {
-      console.log(e);
+      console.log('Skill Creation error', e);
     }
   };
   const Search = useCallback(async (query: string) => {
     try {
-      setSkillExists(false);
       const data = await fetch(`/api/skills/search/${query}`);
       const res = await data.json();
-      const filteredResults = res.result.filter((item: { Skill: string }) => {
-        if (item.Skill !== query.trimEnd()) {
-          return true;
-        } else {
-          setSkillExists(true);
-          return false;
+      const filteredResults = res.result.filter(
+        (item: { Skill: string; id: number }) => {
+          if (item.Skill !== query.trimEnd()) {
+            return true;
+          } else {
+            return false;
+          }
         }
-      });
+      );
       setSearchResults(filteredResults);
     } catch (e) {
       console.log('Search Error:', e);
@@ -69,7 +67,7 @@ export default function Home() {
       if (skill.trim()) {
         Search(skill.trim());
       }
-    }, 300); // debounce by 300ms
+    }, 50); // debounce by 50ms
 
     return () => clearTimeout(delayDebounce);
   }, [skill, Search]);
@@ -134,19 +132,7 @@ export default function Home() {
             <button
               className='bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold'
               onClick={() => {
-                if (skillExists) {
-                  //naviigate
-                } else {
-                  if (searchResults.length && !submited) {
-                    console.log('suggestions');
-                    setSubmited(true);
-                    //show popup (We already have something simmilar ready for you, check search suggestions and if anything seems like something you are interested in, if not submit again)
-                    return null;
-                  } else {
-                    console.log('no suggestions');
-                    SubmitCreateSkill();
-                  }
-                }
+                SubmitSkill();
               }}
             >
               Submit

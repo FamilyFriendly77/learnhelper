@@ -1,15 +1,19 @@
 import { RoadmapType } from '@/app/(ShowDataAndTypes)/RoadmapTypes';
 import postgres from 'postgres';
-export async function getSkillsResults({
-  SearchQuery,
-}: {
-  SearchQuery: string;
-}) {
+export async function getSkillsResults(SearchQuery: string) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
   const response = await sql`SELECT * FROM public."Skills"
  WHERE "Skill" ILIKE '%' || ${SearchQuery} || '%'`;
   return response;
 }
+
+export async function doesSkillExist(SearchQuery: string) {
+  const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
+  const response = await sql`SELECT * FROM public."Skills"
+ WHERE "Skill" = ${SearchQuery}`;
+  return response[0];
+}
+
 export async function createSkillResult(query: string) {
   const sql = postgres(process.env.DATABASE_URL || '', { ssl: 'require' });
   const response =
