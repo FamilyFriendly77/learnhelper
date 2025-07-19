@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { UserQuery } from '../../utils/queryFunctions';
 //it might be a good idea to make search bar user component and the whole front page a server component, it should not be complicated it can make the site more snappy and overall ipmrove optimazation but it is a task for later
 export default function Home() {
   const { data: session } = useSession();
@@ -23,13 +24,7 @@ export default function Home() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: userData } = useQuery({
     queryKey: ['user'],
-    queryFn: async () => {
-      if (session) {
-        const data = await fetch(`/api/auth/getUser/${session?.user?.email}`);
-        return await data.json();
-      }
-      return null;
-    },
+    queryFn: async () => UserQuery(session),
   });
   const SubmitSkill = async () => {
     try {
@@ -196,9 +191,9 @@ export default function Home() {
         <div className='border-3 rounded-t-3xl border-solid border-[#171A21] h-160 w-120 mb-48 flex flex-col justify-center items-between bg-linear-to-tr from-[#00A1E0] to-[#0CAC64] rounded-t-3xl'>
           <div className='w-full h-fit border-b-2'>
             <h3 className='font-bold text-2xl text-[#171A21] p-2 flex justify-center text-[#EBEBEB] items-center '>
-              How to learn a new skill easly?
-            </h3>
-          </div>
+              How to learn a new skill easly?{' '}
+            </h3>{' '}
+          </div>{' '}
           <div className='flex flex-col justify-end items-center w-full h-full bg-[#EBEBEB]'>
             <Message
               message='I have a question. Can you help me?'
@@ -219,7 +214,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className='w-full h-64 mt-32 bg-[#EBEBEB] rounded-t-4xl flex justify-center items-center text-[#171A21]'>
+      <div className='w-full h-36 bg-[#EBEBEB] rounded-t-xl flex justify-center items-center'>
         © 2025 Krystian Mikołajczak 2025
       </div>
     </div>
