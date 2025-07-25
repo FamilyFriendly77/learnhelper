@@ -9,7 +9,7 @@ import {
 
 export async function GET(
   req: Request,
-  { params }: { params: { skill: string } }
+  {params}: { params: Promise<{ skill: string }> }
 ) {
   const result = null;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +24,7 @@ export async function GET(
 //openai creation of roadmap and sending it to postgres
 export async function POST(
   req: Request,
-  { params }: { params: { skill: string } }
+  { params }: { params: Promise<{ skill: string }> }
 ) {
   let roadmap = null;
   let id = null;
