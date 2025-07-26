@@ -13,7 +13,7 @@ export default async function RoadmapPage({ params }: Params) {
       <div className="w-full  grow-1 flex items-center justify-center">
         <div className="w-full h-fit flex flex-col rounded-4xl bg-[#EBEBEB] mt-36 justify-start items-center">
           <div className="w-full h-fit pt-12 flex justify-center items-center">
-            <RoadmapServer skill={skill} />
+            <RoadmapServer skill={skill} session={session} />
             <Chat session={session} SkillId={skill} />
           </div>
         </div>

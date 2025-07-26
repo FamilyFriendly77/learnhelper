@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 #__next {
   min-height: 100vh;
@@ -8,24 +8,11 @@
 }
 
 @theme {
-  --animate-bounce: bounce 0.5s 0.1s ease-in-ou @keyframes bounce {
-    0% {
-      transform: translateY(0%);
-    }
-
-    50% {
-      transform: translateY(-25%);
-
-      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-    }
-    70% {
-      transform: translateY(25%);
-
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    }
-    100% {
-      transform: translateY(0%);
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    }
-  }
+  --animate-bounce: bounce 0.5s 0.1s ease-in-ou @keyframes bounce {0%
+    {transform: translateY(0%) ;} 50% {transform: translateY(-25%) ;
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1) ;} 70%
+    {transform: translateY(25%) ;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1) ;} 100%
+    {transform: translateY(0%) ;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1) ;}};
 }

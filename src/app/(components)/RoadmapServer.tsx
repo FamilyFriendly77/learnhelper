@@ -1,8 +1,15 @@
-import { RoadmapItemType } from '../(ShowDataAndTypes)/RoadmapTypes';
-import { getSkillRoadmap } from '../../../utils/postgres';
-import Roadmap from './Roadmap';
+import { Session } from "next-auth";
+import { RoadmapItemType } from "../(ShowDataAndTypes)/RoadmapTypes";
+import { getSkillRoadmap } from "../../../utils/postgres";
+import Roadmap from "./Roadmap";
 
-export default async function RoadmapServer({ skill }: { skill: number }) {
+export default async function RoadmapServer({
+  skill,
+  session,
+}: {
+  skill: number;
+  session: Session;
+}) {
   const roadmap = await getSkillRoadmap(skill);
   const Items = JSON.parse(roadmap.items);
   const items = Items.map((item: RoadmapItemType) => ({
