@@ -11,6 +11,7 @@ type Props = {
   description: string;
   skillName: string;
   session: Session;
+  skill: number;
 };
 
 export default function Roadmap({
@@ -18,6 +19,7 @@ export default function Roadmap({
   description,
   skillName,
   session,
+  skill,
 }: Props) {
   const queryClient = new QueryClient();
   const { data: userData } = useQuery({
@@ -27,7 +29,9 @@ export default function Roadmap({
   const { data: progress } = useQuery({
     queryKey: ["progress"],
     queryFn: async () => {
-      const data = await fetch("");
+      const data = await fetch(
+        `/api/skills/getProgress/${skill}/${await userData.id}/${items.length}`,
+      );
       return data.json();
     },
   });

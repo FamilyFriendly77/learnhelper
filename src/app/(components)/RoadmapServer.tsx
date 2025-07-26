@@ -18,6 +18,8 @@ export default async function RoadmapServer({
   }));
   return (
     <Roadmap
+      session={session}
+      skill={skill}
       skillName={roadmap.skillname}
       items={items}
       description={roadmap.description}

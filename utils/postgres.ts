@@ -51,13 +51,14 @@ export async function createRoadmapProgress(
   const response =
     await sql`INSERT INTO public."RoadmapsProgress"(skillid, userid, progress) VALUES(${
       skillid
-    }, ${userid}, ${generatedProgress}) `;
-  return response;
+    }, ${userid}, ${generatedProgress}) RETURNING *`;
+  return response[0];
 }
 
 export async function getRoadmapProgress(skillid: number, userid: string) {
   const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`SELECT * FROM public."RoadmapsProgress" WHERE skillid = ${skillid} AND userid = ${userid}`;
-  return response;
+  if (response.length) return response[0];
+  else return [];
 }

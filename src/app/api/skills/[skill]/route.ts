@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
-import { OpenAI } from 'openai';
-import { Instructions } from '../../../../../openaiInstructions';
+import { NextResponse } from "next/server";
+import { OpenAI } from "openai";
+import { Instructions } from "../../../../../openaiInstructions";
 import {
   createSkillResult,
   createSkillRoadmap,
   doesSkillExist,
-} from '../../../../../utils/postgres';
+} from "../../../../../utils/postgres";
 
 export async function GET(
   req: Request,
-  {params}: { params: Promise<{ skill: string }> }
+  { params }: { params: Promise<{ skill: string }> },
 ) {
   const result = null;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,14 +17,14 @@ export async function GET(
   try {
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'Error' }, { status: 500 });
+    return NextResponse.json({ message: "Error" }, { status: 500 });
   }
   return NextResponse.json({ result }, { status: 200 });
 }
 //openai creation of roadmap and sending it to postgres
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ skill: string }> }
+  { params }: { params: Promise<{ skill: string }> },
 ) {
   let roadmap = null;
   let id = null;
@@ -35,9 +35,9 @@ export async function POST(
       id = doesExist.id;
     } else {
       const client = new OpenAI();
-      console.log('++++');
+      console.log("++++");
       const res = await client.responses.create({
-        model: 'o4-mini-2025-04-16',
+        model: "o4-mini-2025-04-16",
         instructions: Instructions,
         input: `I want to learn ${skill}, generate a roadmap to help me to achieve the goal and then become proficient in it and expand my knowlage`,
       });
@@ -48,7 +48,7 @@ export async function POST(
     }
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: 'Error' }, { status: 500 });
+    return NextResponse.json({ message: "Error" }, { status: 500 });
   }
   return NextResponse.json({ skillId: id }, { status: 200 });
 }
