@@ -4,7 +4,7 @@ import { RoadmapItemType } from "../(ShowDataAndTypes)/RoadmapTypes";
 import RoadmapItem from "./RoadmapItem";
 import { Session } from "next-auth";
 import { UserQuery } from "../../../utils/queryFunctions";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 type Props = {
   items: RoadmapItemType[];
@@ -29,13 +29,33 @@ export default function Roadmap({
   const { data: progress } = useQuery({
     queryKey: ["progress"],
     queryFn: async () => {
-      const data = await fetch(
-        `/api/skills/getProgress/${skill}/${await userData.id}/${items.length}`,
-      );
-      return data.json();
+      let data = await fetch(`/api/skills/progress/${skill}/${userData.id}`);
+      let progress = await data.json();
+      if (!progress.lenght) {
+        data = await fetch(`/api/skills/progress/${skill}/${userData.id}/`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ items: items.length }),
+        });
+        progress = await data.json();
+      }
+      return JSON.parse(progress.progress.progress);
     },
   });
-
+  const { mutate: editProgress } = useMutation({
+    mutationKey: ["progress"],
+    mutationFn: async () => {
+      return await fetch(`/api/skills/progress/${skill}/${userData.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(progress),
+      });
+    },
+    onSuccess: (result, variables, context) => {
+      queryClient.setQueryData(["progress"], () => result);
+    },
+  });
   return (
     <div className="w-full h-fit flex flex-col gap-30 mb-48 justify-start items-center">
       <div className="flex flex-col justify-center items-center gap-8">
@@ -52,7 +72,7 @@ export default function Roadmap({
             key={`Item${i}`}
             className="w-fit h-fit items-start justify-start p-0"
           >
-            <RoadmapItem Item={item} id={`Item${i}`} />
+            <RoadmapItem progress={false} Item={item} id={`Item${i}`} />
 
             {i < items.length - 1 ? (
               <Xarrow

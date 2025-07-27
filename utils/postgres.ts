@@ -1,28 +1,25 @@
 import { RoadmapType } from "@/app/(ShowDataAndTypes)/RoadmapTypes";
 import postgres from "postgres";
+export const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
 export async function getSkillsResults(SearchQuery: string) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response = await sql`SELECT * FROM public."Skills"
  WHERE "Skill" ILIKE '%' || ${SearchQuery} || '%'`;
   return response;
 }
 
 export async function doesSkillExist(SearchQuery: string) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response = await sql`SELECT * FROM public."Skills"
  WHERE "Skill" = ${SearchQuery}`;
   return response[0];
 }
 
 export async function createSkillResult(query: string) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`INSERT INTO public."Skills"("Skill") VALUES(${query}) RETURNING id`;
   return response[0].id;
 }
 
 export async function getSkillRoadmap(query: number) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`SELECT * FROM public."Roadmaps" WHERE "skillid" = ${query}`;
   return response[0];
@@ -35,7 +32,6 @@ export async function createSkillRoadmap(
   roadmap: RoadmapType,
   skillId: number,
 ) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`INSERT INTO public."Roadmaps"(skillname, description, items, skillid) VALUES(${
       roadmap.skillName
@@ -47,7 +43,6 @@ export async function createRoadmapProgress(
   skillid: number,
   generatedProgress: string,
 ) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`INSERT INTO public."RoadmapsProgress"(skillid, userid, progress) VALUES(${
       skillid
@@ -56,9 +51,16 @@ export async function createRoadmapProgress(
 }
 
 export async function getRoadmapProgress(skillid: number, userid: string) {
-  const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
   const response =
     await sql`SELECT * FROM public."RoadmapsProgress" WHERE skillid = ${skillid} AND userid = ${userid}`;
-  if (response.length) return response[0];
-  else return [];
+  return response;
+}
+export async function updateRoadmapProgress(
+  skillid: number,
+  userid: string,
+  progress: string,
+) {
+  const response =
+    await sql`UPDATE public."RoadmapsProgress" SET progress = ${progress} WHERE userid = ${userid} AND skillid = ${skillid} RETURNING *`;
+  return response;
 }

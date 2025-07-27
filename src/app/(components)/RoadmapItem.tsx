@@ -17,14 +17,16 @@ import { motion, AnimatePresence } from "framer-motion";
 type Props = {
   Item: RoadmapItemType;
   id: string;
+  progress: boolean;
 };
 
-export default function RoadmapItem({ Item, id }: Props) {
+export default function RoadmapItem({ Item, id, progress }: Props) {
   const [xChange, setXChange] = useState(-50);
   const [isUnwrapped, setIsUnwrapped] = useState(false);
   const [tipIndex, setTipIndex] = useState(0);
   const handleCheck = () => {
     // FIX to be finished
+    progress = !progress;
     return 0;
   };
   return (
@@ -35,7 +37,7 @@ export default function RoadmapItem({ Item, id }: Props) {
       >
         <div className="flex flex-row justify-start w-fit h-fit items-center gap-4">
           <button onClick={() => handleCheck()}>
-            <CircleCheck size={48} />
+            <CircleCheck size={48} fill={progress ? "##0CAC64" : ""} />
           </button>
           <div className="flex-col w-fit border-2 p-4 mb-2 mt-2 max-w-240 rounded-xl pl-8 pr-8">
             <div className="flex flex-col gap-2 justify-start items-start">
