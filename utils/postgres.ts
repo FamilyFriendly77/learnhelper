@@ -41,26 +41,27 @@ export async function createSkillRoadmap(
 export async function createRoadmapProgress(
   userid: string,
   skillid: number,
-  generatedProgress: string,
+  generatedProgress: boolean[],
 ) {
   const response =
     await sql`INSERT INTO public."RoadmapsProgress"(skillid, userid, progress) VALUES(${
       skillid
-    }, ${userid}, ${generatedProgress}) RETURNING *`;
+    }, ${userid}, ${sql.array(generatedProgress)}) RETURNING *`;
   return response[0];
 }
 
 export async function getRoadmapProgress(skillid: number, userid: string) {
   const response =
     await sql`SELECT * FROM public."RoadmapsProgress" WHERE skillid = ${skillid} AND userid = ${userid}`;
-  return response;
+  return response[0];
 }
 export async function updateRoadmapProgress(
   skillid: number,
   userid: string,
-  progress: string,
+  progress: boolean[],
 ) {
+  console.log(progress);
   const response =
-    await sql`UPDATE public."RoadmapsProgress" SET progress = ${progress} WHERE userid = ${userid} AND skillid = ${skillid} RETURNING *`;
-  return response;
+    await sql`UPDATE public."RoadmapsProgress" SET progress = ${sql.array(progress)} WHERE userid = ${userid} AND skillid = ${skillid} RETURNING *`;
+  return response[0];
 }

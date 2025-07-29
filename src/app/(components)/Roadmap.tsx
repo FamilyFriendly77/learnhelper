@@ -4,7 +4,7 @@ import { RoadmapItemType } from "../(ShowDataAndTypes)/RoadmapTypes";
 import RoadmapItem from "./RoadmapItem";
 import { Session } from "next-auth";
 import { UserQuery } from "../../../utils/queryFunctions";
-import { QueryClient, useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   items: RoadmapItemType[];
@@ -21,48 +21,65 @@ export default function Roadmap({
   session,
   skill,
 }: Props) {
-  const queryClient = new QueryClient();
-  const { data: userData } = useQuery({
+  const queryClient = useQueryClient();
+  const { isPending: userPending, data: userData } = useQuery({
     queryKey: ["user"],
     queryFn: async () => UserQuery(session),
   });
-  const { data: progress } = useQuery({
+  const { isPending: progressPending, data: progress } = useQuery({
     queryKey: ["progress"],
     queryFn: async () => {
-      let data = await fetch(`/api/skills/progress/${skill}/${userData.id}`);
+      const data = await fetch(`/api/skills/progress/${skill}/${userData.id}`);
       let progress = await data.json();
-      if (!progress.lenght) {
-        data = await fetch(`/api/skills/progress/${skill}/${userData.id}/`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
+      if (!progress.progress) {
+        const newData = await fetch(
+          `/api/skills/progress/${skill}/${userData.id}/`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({ items: items.length }),
           },
-          body: JSON.stringify({ items: items.length }),
-        });
-        progress = await data.json();
+        );
+        progress = await newData.json();
       }
-      return JSON.parse(progress.progress.progress);
+      return progress.progress.progress;
     },
   });
-  const { mutate: editProgress } = useMutation({
+  const mutation = useMutation({
     mutationKey: ["progress"],
-    mutationFn: async () => {
-      return await fetch(`/api/skills/progress/${skill}/${userData.id}`, {
-        method: "PATCH",
-        body: JSON.stringify(progress),
-      });
-    },
-    onSuccess: (result, variables, context) => {
-      queryClient.setQueryData(["progress"], () => result);
+    mutationFn: async (index: number) => {
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+      const newProgress = progress.slice();
+      newProgress[index] = !progress[index];
+      queryClient.setQueryData(["progress"], newProgress);
+      const response = await fetch(
+        `/api/skills/progress/${skill}/${userData.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ progress: newProgress }),
+        },
+      );
+
+      const result = await response.json();
+      return result.progress;
     },
   });
+  if (progressPending || userPending) {
+    return <div> Loading...</div>;
+  }
   return (
     <div className="w-full h-fit flex flex-col gap-30 mb-48 justify-start items-center">
       <div className="flex flex-col justify-center items-center gap-8">
         <h1 className="font-bold text-4xl text-[#171A21] flex justify-center items-center text-center max-w-[80%]">
           {skillName}
         </h1>
-        <h3 className="text-2xl w-[80%] h-fit text-center font-semibold">
+        <h3
+          className="text-2xl w-[80%] h-fit text-center font-semibold"
+          onClick={() => console.log(progress)}
+        >
           {description}
         </h3>
       </div>
@@ -72,7 +89,12 @@ export default function Roadmap({
             key={`Item${i}`}
             className="w-fit h-fit items-start justify-start p-0"
           >
-            <RoadmapItem progress={false} Item={item} id={`Item${i}`} />
+            <RoadmapItem
+              progress={progress[i]}
+              Item={item}
+              id={{ index: i, id: `Item${i}` }}
+              onCheck={mutation.mutate}
+            />
 
             {i < items.length - 1 ? (
               <Xarrow

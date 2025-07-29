@@ -4,7 +4,6 @@ import {
   getRoadmapProgress,
   updateRoadmapProgress,
 } from "../../../../../../../utils/postgres";
-import type { NextApiRequest, NextApiResponse } from "next";
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ skillid: number; userid: string }> },
@@ -23,15 +22,15 @@ export async function POST(
 ) {
   const { skillid, userid } = await params;
   const { items } = await req.json();
-  const generatedProgress = {};
+  const generatedProgress = [];
   for (let i = 0; i < items; i++) {
-    generatedProgress[i as unknown as string] = false;
+    generatedProgress.push(false);
   }
   try {
     const progress = await createRoadmapProgress(
       userid,
       skillid,
-      JSON.stringify(generatedProgress),
+      generatedProgress,
     );
     return NextResponse.json({ progress }, { status: 200 });
   } catch (e) {
@@ -43,11 +42,10 @@ export async function PATCH(
   { params }: { params: Promise<{ skillid: number; userid: string }> },
 ) {
   const { skillid, userid } = await params;
-  const progress = JSON.stringify(req.body);
+  const { progress } = await req.json();
   try {
-    await updateRoadmapProgress(skillid, userid, progress);
-    JSON.parse(progress);
-    return NextResponse.json(progress, { status: 200 });
+    const newProgress = await updateRoadmapProgress(skillid, userid, progress);
+    return NextResponse.json(newProgress, { status: 200 });
   } catch (e) {
     return NextResponse.json({ error: e }, { status: 500 });
   }
