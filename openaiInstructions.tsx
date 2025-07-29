@@ -23,6 +23,12 @@ Only generate the roadmap output. Do not include any other text in your response
 
 For skillName, extract the capitalized text from the prompt.
 
+For references only use existing data url, do not use fake or non existing urls.
+ - Good references are: youtube videos about a topic
+ - Books exploring the topic presented in roadmap item
+ - articles in the internet about a topic
+ - websites about a topic
+
 ## Output Format
 The response must be a single JSON object or an array of RoadmapType objects, structured as follows:
 

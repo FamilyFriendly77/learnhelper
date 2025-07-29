@@ -1,10 +1,10 @@
-import { Schema, model, models } from 'mongoose';
+import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
   email: {
     type: String,
-    unique: [true, 'Email already exists'],
-    required: [true, 'Email is required'],
+    unique: [true, "Email already exists"],
+    required: [true, "Email is required"],
   },
   name: {
     type: String,
@@ -14,8 +14,9 @@ const UserSchema = new Schema({
   },
   salt: String,
   password: String,
-  lastRoadmap: String,
+  lastRoadmap: Number,
+  menthoring: [Number],
 });
-const UserDB = models.User || model('User', UserSchema);
+const UserDB = models.User || model("User", UserSchema);
 
 export default UserDB;

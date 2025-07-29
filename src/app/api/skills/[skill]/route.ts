@@ -6,7 +6,6 @@ import {
   createSkillRoadmap,
   doesSkillExist,
 } from "../../../../../utils/postgres";
-
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ skill: string }> },

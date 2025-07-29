@@ -60,7 +60,6 @@ export async function updateRoadmapProgress(
   userid: string,
   progress: boolean[],
 ) {
-  console.log(progress);
   const response =
     await sql`UPDATE public."RoadmapsProgress" SET progress = ${sql.array(progress)} WHERE userid = ${userid} AND skillid = ${skillid} RETURNING *`;
   return response[0];
