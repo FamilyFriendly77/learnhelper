@@ -24,7 +24,7 @@ export default async function RootLayout({
           <SessionProvider session={session}>
             <NavBar />
             <div className="grow-1 w-full flex">{children}</div>
-            <div className="w-full h-32 bg-[#EBEBEB] flex justify-center items-center mt-16 rounded-t-3xl ">
+            <div className="w-full h-18 bg-[#EBEBEB] flex justify-center items-center mt-16 rounded-t-3xl ">
               © Krystian Mikołajczak 2025
             </div>
           </SessionProvider>

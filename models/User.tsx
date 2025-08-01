@@ -15,7 +15,7 @@ const UserSchema = new Schema({
   salt: String,
   password: String,
   lastRoadmap: Number,
-  menthoring: [Number],
+  mentoring: [Number],
 });
 const UserDB = models.User || model("User", UserSchema);
 

@@ -9,6 +9,7 @@ export default function SearchSkill() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [skill, setSkill] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
   const { data: userData } = useQuery({
@@ -17,7 +18,7 @@ export default function SearchSkill() {
   });
   const SubmitSkill = async () => {
     try {
-      console.log();
+      setIsLoading(true);
       const data = await fetch(`/api/skills/${skill}`, { method: "POST" });
       const response = await data.json();
       await fetch(`/api/auth/getUser/${userData.email}/updateLastRoadmap`, {
@@ -25,6 +26,7 @@ export default function SearchSkill() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ skill: response.skillId }),
       });
+      setIsLoading(false);
       router.push(`/roadmap/${response.skillId}`);
     } catch (e) {
       console.log("Skill Creation error", e);
@@ -59,73 +61,74 @@ export default function SearchSkill() {
 
     return () => clearTimeout(delayDebounce);
   }, [skill, Search]);
-
-  return (
-    <div className="w-full  grow-1 flex items-center justify-center">
-      <div className="w-[60%] flex flex-col justify-center items-center h-fit bg-[#EBEBEB] rounded-3xl">
-        <h1 className="font-bold text-2xl w-full text-center pb-6 pt-8">
-          WHAT DO YOU WANT TO LEARN TODAY?
-        </h1>
-        <div className="w-full flex justify-center items-start pb-6">
-          <h3 className="font-semibold text-xl pr-2 h-12 justify-center items-center flex">
-            I want to learn
-          </h3>
-          <div className="flex-col justify-center items-center">
-            <input
-              id="SkillInput"
-              type="text"
-              onFocus={() => {
-                setShowSuggestions(true);
-              }}
-              onBlur={() => {
-                if (!hovers) setShowSuggestions(false);
-              }}
-              className="p-2 rounded-2xl w-128 h-12 border-2 border-[#171A21]"
-              value={skill}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSkill(value.toUpperCase());
-              }}
-            />
-            {showSuggestions ? (
-              <div
-                className="w-128 flex justify-center items-center absolute"
-                onMouseEnter={() => setHovers(true)}
-                onMouseLeave={() => setHovers(false)}
-              >
-                <div className="flex-col justify-center items-center">
-                  {searchResults.map((res: { id: number; Skill: string }) => {
-                    return (
-                      <div
-                        key={res.id}
-                        className="border-solid border-x-2 border-b-2 w-120 h-8 text-center flex justify-center content-box items-center font-semibold bg-[#EBEBEB] hover:bg-[#FF1F1F] hover:border-[#171A21] hover:text-[#EBEBEB]"
-                        onClick={() => {
-                          setSkill(res.Skill);
-                          Search(res.Skill);
-                          document.getElementById("SkillInput")?.focus();
-                        }}
-                      >
-                        {res.Skill}
-                      </div>
-                    );
-                  })}
+  if (!isLoading)
+    return (
+      <div className="w-full  grow-1 flex items-center justify-center">
+        <div className="w-[60%] flex flex-col justify-center items-center h-fit bg-[#EBEBEB] rounded-3xl">
+          <h1 className="font-bold text-2xl w-full text-center pb-6 pt-8">
+            WHAT DO YOU WANT TO LEARN TODAY?
+          </h1>
+          <div className="w-full flex justify-center items-start pb-6">
+            <h3 className="font-semibold text-xl pr-2 h-12 justify-center items-center flex">
+              I want to learn
+            </h3>
+            <div className="flex-col justify-center items-center">
+              <input
+                id="SkillInput"
+                type="text"
+                onFocus={() => {
+                  setShowSuggestions(true);
+                }}
+                onBlur={() => {
+                  if (!hovers) setShowSuggestions(false);
+                }}
+                className="p-2 rounded-2xl w-128 h-12 border-2 border-[#171A21]"
+                value={skill}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSkill(value.toUpperCase());
+                }}
+              />
+              {showSuggestions ? (
+                <div
+                  className="w-128 flex justify-center items-center absolute"
+                  onMouseEnter={() => setHovers(true)}
+                  onMouseLeave={() => setHovers(false)}
+                >
+                  <div className="flex-col justify-center items-center">
+                    {searchResults.map((res: { id: number; Skill: string }) => {
+                      return (
+                        <div
+                          key={res.id}
+                          className="border-solid border-x-2 border-b-2 w-120 h-8 text-center flex justify-center content-box items-center font-semibold bg-[#EBEBEB] hover:bg-[#FF1F1F] hover:border-[#171A21] hover:text-[#EBEBEB]"
+                          onClick={() => {
+                            setSkill(res.Skill);
+                            Search(res.Skill);
+                            document.getElementById("SkillInput")?.focus();
+                          }}
+                        >
+                          {res.Skill}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
+          </div>
+
+          <div className="pb-8">
+            <button
+              className="bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold"
+              onClick={() => {
+                SubmitSkill();
+              }}
+            >
+              Submit
+            </button>
           </div>
         </div>
-
-        <div className="pb-8">
-          <button
-            className="bg-[#FF1F1F] h-14 w-32 rounded-4xl text-xl py-1 px-2 text-[#EBEBEB] font-semibold"
-            onClick={() => {
-              SubmitSkill();
-            }}
-          >
-            Submit
-          </button>
-        </div>
       </div>
-    </div>
-  );
+    );
+  else return <div>Creating Roadmap...</div>;
 }

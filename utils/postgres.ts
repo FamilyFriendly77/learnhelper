@@ -1,6 +1,8 @@
 import { RoadmapType } from "@/app/(ShowDataAndTypes)/RoadmapTypes";
 import postgres from "postgres";
-export const sql = postgres(process.env.DATABASE_URL || "", { ssl: "require" });
+export const sql = postgres(process.env.DATABASE_URL || "", {
+  ssl: "require",
+});
 export async function getSkillsResults(SearchQuery: string) {
   const response = await sql`SELECT * FROM public."Skills"
  WHERE "Skill" ILIKE '%' || ${SearchQuery} || '%'`;
@@ -33,7 +35,7 @@ export async function createSkillRoadmap(
   skillId: number,
 ) {
   const response =
-    await sql`INSERT INTO public."Roadmaps"(skillname, description, items, skillid) VALUES(${
+    await sql`INSERT INTO public."Roadmaps"(skillName, description, items, skillid) VALUES(${
       roadmap.skillName
     }, ${roadmap.description}, ${JSON.stringify(roadmap.items)}, ${skillId}) `;
   return response;

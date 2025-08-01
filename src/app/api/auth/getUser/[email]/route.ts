@@ -22,6 +22,7 @@ export async function GET(
       name: user.name,
       lastRoadmap: user.lastRoadmap,
       image: user.image,
+      mentoring: user.mentoring,
     },
     { status: 200 },
   );

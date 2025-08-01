@@ -22,8 +22,8 @@ export default function Home() {
     if (session) {
       if (!isPending) {
         if (userData.lastRoadmap)
-          router.push(`/roadmap/${userData.lastRoadmap}`);
-        else router.push("/searchSkill");
+          router.replace(`/roadmap/${userData.lastRoadmap}`);
+        else router.replace("/searchSkill");
       }
     }
   });

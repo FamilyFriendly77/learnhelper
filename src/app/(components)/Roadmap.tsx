@@ -76,10 +76,7 @@ export default function Roadmap({
         <h1 className="font-bold text-4xl text-[#171A21] flex justify-center items-center text-center max-w-[80%]">
           {skillName}
         </h1>
-        <h3
-          className="text-2xl w-[80%] h-fit text-center font-semibold"
-          onClick={() => console.log(progress)}
-        >
+        <h3 className="text-2xl w-[80%] h-fit text-center font-semibold">
           {description}
         </h3>
       </div>
