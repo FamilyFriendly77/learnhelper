@@ -4,6 +4,7 @@ import { RoadmapType } from "../(ShowDataAndTypes)/RoadmapTypes";
 import MentorChat from "./MentorChat";
 import { UserType } from "../../../utils/types";
 import MentorModal from "./MentorModal";
+import MentorChatList from "./MentorChatList";
 export default function MentoringItem({
   skill,
   userData,
@@ -13,7 +14,15 @@ export default function MentoringItem({
 }) {
   const [roadmap, setRoadmap] = useState<RoadmapType>();
   const [hover, setHover] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedChat, setSelectedChat] = useState<string>("");
   useEffect(() => {
+    const fetchChatRooms = async () => {
+      try {
+      } catch (e) {
+        console.error("Fetching data error: ", e);
+      }
+    };
     const fetchRoadmap = async () => {
       try {
         const response = await fetch(`/api/skills/${skill}`);
@@ -43,7 +52,10 @@ export default function MentoringItem({
               Edit!
             </button>
             <div className="w-0.5 h-full bg-[#171A21] mx-2" />
-            <button className="bg-[#FF1F1F] rounded-2xl overflow-clip h-full w-[45%] flex items-center justify-center">
+            <button
+              className="bg-[#FF1F1F] rounded-2xl overflow-clip h-full w-[45%] flex items-center justify-center"
+              onClick={() => setModalOpen(true)}
+            >
               Answer to messages!
             </button>
           </div>
@@ -54,9 +66,15 @@ export default function MentoringItem({
           </>
         )}
       </div>
-      <MentorModal>
-        <MentorChat skillId={skill} userData={userData} />
-      </MentorModal>
+      {modalOpen ? (
+        <MentorModal>
+          {selectedChat ? (
+            <MentorChat skillId={skill} userData={userData} />
+          ) : (
+            <MentorChatList chatList={[]} />
+          )}
+        </MentorModal>
+      ) : null}
     </>
   );
 }

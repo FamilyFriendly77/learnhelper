@@ -66,3 +66,15 @@ export async function updateRoadmapProgress(
     await sql`UPDATE public."RoadmapsProgress" SET progress = ${sql.array(progress)} WHERE userid = ${userid} AND skillid = ${skillid} RETURNING *`;
   return response[0];
 }
+export async function createChatroom({
+  room,
+  skill,
+}: {
+  room: string;
+  skill: number;
+}) {
+  const response =
+    await sql`INSERT INTO public."Chatrooms"(room, skillid) VALUES(${room}, ${skill})`;
+}
+export async function createMessage() {}
+export async function getMessages(room: string) {}

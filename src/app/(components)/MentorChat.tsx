@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { UserType } from "../../../utils/types";
 import { socket } from "../../../lib/socketClient";
 import Message from "./Message";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 
 export default function MentorChat({
   skillId,
@@ -18,6 +18,12 @@ export default function MentorChat({
   >([]);
   const [chatOpen, setChatOpen] = useState(false);
   useEffect(() => {
+    socket.emit("join-room", {
+      //tbc to room from db
+      room: `${skillId}${userData.id}`,
+      username: userData.name,
+    });
+
     socket.on(
       "message",
       (data: { sender: string; senderName: string; message: string }) => {
@@ -37,15 +43,6 @@ export default function MentorChat({
     };
   }, []);
   //To be changed to handle different rooms
-  const handleOpenChat = () => {
-    if (!chatOpen) {
-      socket.emit("join-room", {
-        //tbc to room from db
-        room: `${skillId}${userData.id}`,
-        username: userData.name,
-      });
-    }
-  };
   const handleSendMessage = (message: string) => {
     const data = {
       //tbc to room from DB
@@ -62,17 +59,19 @@ export default function MentorChat({
   };
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center h-fit bg-[$EBEBEB]">
-      <div className=" w-96 h-16 flex justify-between px-8 items-center text-2xl font-bold text-[#EBEBEB] border-2 border-[#171A21] bg-[#FF1F1F] ">
+    <div className="w-fit flex flex-col justify-center items-center h-fit bg-[#EBEBEB]">
+      <div className=" w-96 h-16 flex justify-between px-8 items-center text-2xl overflow-clip font-bold text-[#EBEBEB] border-b-2 border-[#171A21] bg-[#FF1F1F] ">
         <span>Answer Questions</span>
         <div
           onClick={() => {
-            handleOpenChat();
-            setChatOpen(!chatOpen);
+            // handleOpenChat();
+            // setChatOpen(!chatOpen);
           }}
-        ></div>
+        >
+          <X size={32} />
+        </div>
       </div>
-      <div className="w-full h-112 border-x-2 border-b-2 border-[#171A21] bg-[#EBEBEB] flex-col items-center">
+      <div className="w-full h-112 bg-[#EBEBEB] flex-col items-center">
         <div className="w-full h-[80%] border-b-3">
           {messages.map((message) => (
             <Message
