@@ -19,6 +19,7 @@ export default function Chat({
   const [messages, setMessages] = useState<
     { sender: string; senderName: string; message: string }[]
   >([]);
+  const [room, setRoom] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
   const queryClient = new QueryClient();
   const { data: userData } = useQuery({
@@ -45,8 +46,11 @@ export default function Chat({
     };
   }, []);
   //To be changed to handle different rooms
-  const handleOpenChat = () => {
+  const handleOpenChat = async () => {
     if (!chatOpen) {
+      const res = await fetch(`/api/chat/${SkillId}/${SkillId}${userData.id}`);
+      const data = await res.json();
+      setRoom(data.room[0]);
       socket.emit("join-room", {
         room: `${SkillId}${userData.id}`,
         username: userData.name,

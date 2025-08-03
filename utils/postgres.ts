@@ -74,7 +74,13 @@ export async function createChatroom({
   skill: number;
 }) {
   const response =
-    await sql`INSERT INTO public."Chatrooms"(room, skillid) VALUES(${room}, ${skill})`;
+    await sql`INSERT INTO public."Chatrooms"(room, skillid) VALUES(${room}, ${skill}) RETURNING *`;
+  return response;
+}
+export async function getChatrooms(skill: number) {
+  const response = await sql`SELECT * FROM public."Chatrooms" WHERE skillid = 
+${skill}`;
+  return response;
 }
 export async function createMessage() {}
 export async function getMessages(room: string) {}
